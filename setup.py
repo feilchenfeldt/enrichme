@@ -42,10 +42,7 @@ setup(
     py_modules=['enrichment','pandas_util'],
     #packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=[
-        "numpy >=1.6.1",
-        "scipy >=0.13.0",
-        "matplotlib >= 1.4.3",
-        "pandas >= 0.17.0"
+        "pandas"
     ],
     tests_require=[
             'pytest',
