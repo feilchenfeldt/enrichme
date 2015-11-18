@@ -35,7 +35,7 @@ import pandas as pd
 import numpy as np
 import gc, logging
 import multiprocessing as mp
-from hs_vervet.tools import hs_pandas as hp
+import pandas_util as hp
 #import warnings
 #warnings.simplefilter(action = "ignore", category = 'SettingWithCopyWarning')
 #warnings.simplefilter("ignore")
@@ -46,6 +46,8 @@ logging.basicConfig(format='%(levelname)-8s %(asctime)s  %(message)s')
 #logging.basicConfig(format='%(levelname)-8s %(asctime)s %(funcName)20s()  %(message)s')
 logger.setLevel(logging.DEBUG)
 
+__all__ = ['enrichme']
+__version__ = '0.0.1'
 
 def get_sep(fn_fh):
     try:
@@ -706,7 +708,7 @@ def save_info(enrich, name):
     except AttributeError:
         pass
 
-if __name__ == "__main__":
+def enrichme():
     import argparse, time
     #import pdb
 
@@ -1039,3 +1041,5 @@ if __name__ == "__main__":
                 os.remove(fh.name)
 
 
+if __name__ == "__main__":
+    enrichme()

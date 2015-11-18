@@ -1,0 +1,7 @@
+include HISTORY.rst
+include README.rst
+include setup.cfg
+include setup.py
+include MANIFEST.in
+include LICENSE
+recursive-include docs *.txt
