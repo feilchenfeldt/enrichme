@@ -47,7 +47,7 @@ logging.basicConfig(format='%(levelname)-8s %(asctime)s  %(message)s')
 logger.setLevel(logging.DEBUG)
 
 __all__ = ['enrichme']
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 def get_sep(fn_fh):
     try:
