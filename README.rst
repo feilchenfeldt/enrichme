@@ -33,32 +33,32 @@ You can run unit tests using the command:
 How to use
 ======================================================================
 
- $enrichme.py -R Permute --help
+    enrichme.py -R Permute --help
 
- The program currently implements three methods:
- (1) Candidate  (enrichme.py -R Permute -M Candidate --help)
-     Comparing a candidate gene list to a background gene list.
-     This is a standard function that is done by many enrichment
-     analysis tools. No correction for gene length or LD.
+The program currently implements three methods:
+(1) Candidate  (enrichme.py -R Permute -M Candidate --help)
+    Comparing a candidate gene list to a background gene list.
+    This is a standard function that is done by many enrichment
+    analysis tools. No correction for gene length or LD.
 
- (2) TopScores (enrichme.py -R Permute -M TopScores --help)
-     Check whether top ranking scores are within or close to genes
-     enriched in specific gene-categories.
-     This method naturally corrects for gene-length and LD.
-     This method is useful if one expects that only scores above
-     a threshold contain biologically relevant information.
-     No information is used from the ranking of scores that pass
-     the threshold.
+(2) TopScores (enrichme.py -R Permute -M TopScores --help)
+    Check whether top ranking scores are within or close to genes
+    enriched in specific gene-categories.
+    This method naturally corrects for gene-length and LD.
+    This method is useful if one expects that only scores above
+    a threshold contain biologically relevant information.
+    No information is used from the ranking of scores that pass
+    the threshold.
 
- (3) Summary (enrichme.py -R Permute -M Summary --help)
-     Similar to TopScores but instead of defining a threshold
-     on the scores, a summary of scores is calculated for each gene
-     category. As an example, for each gene category, the program could
-     calculate the mean across the category of the maximum score across
-     each gene in the category.
-     This method is useful if one thinks that scores contain information
-     down to low value or if the relative value of scores is important
-     beyond defining a simple threshold.
+(3) Summary (enrichme.py -R Permute -M Summary --help)
+    Similar to TopScores but instead of defining a threshold
+    on the scores, a summary of scores is calculated for each gene
+    category. As an example, for each gene category, the program could
+    calculate the mean across the category of the maximum score across
+    each gene in the category.
+    This method is useful if one thinks that scores contain information
+    down to low value or if the relative value of scores is important
+    beyond defining a simple threshold.
 
 INPUT files:
 
