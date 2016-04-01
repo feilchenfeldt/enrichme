@@ -1,4 +1,4 @@
-chrom,pos,end,gene_id
+chrom,start,end,gene_id
 1,3631,5899,AT1G01010
 1,5928,8737,AT1G01020
 1,11649,13714,AT1G01030

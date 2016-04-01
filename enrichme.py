@@ -39,6 +39,9 @@ import pandas_util as hp
 #import warnings
 #warnings.simplefilter(action = "ignore", category = 'SettingWithCopyWarning')
 #warnings.simplefilter("ignore")
+#Treat the warnings expliticly in the future.
+pd.options.mode.chained_assignment = None  # default='warn'
+
 eu = os.path.expanduser
 jn = os.path.join
 logger = logging.getLogger()
@@ -66,7 +69,11 @@ def get_sep(fn_fh):
     return sep
 
 def init_rank_table(assoc):
-    rt = pd.DataFrame({assoc.name:assoc.values,"rank":0,"out_of":0},index=assoc.index)
+    try:
+        rt = pd.DataFrame({assoc.name:assoc.values,"rank":0,"out_of":0},index=assoc.index)
+    except Exception,e:
+        print assoc
+        raise e
     rt.index.name = assoc.index.name
     return rt
 
@@ -235,7 +242,7 @@ class CandidateEnrichment(object):
         self.rank_table = reduce_mem([self.rank_table, rt])
 
     def get_pvals(self, pval_threshold=1, category_to_description=None):
-        return rank_to_pval(self.rank_table, pval_threshold=1, category_to_description=None)
+        return rank_to_pval(self.rank_table, self.feature_to_category, pval_threshold=1, category_to_description=None)
 
     def create_info(self):
         """
@@ -483,6 +490,8 @@ class TopScoresEnrichment(SummaryEnrichment):
             else:
                 top_n = np.argmax(value_s_s.values<top)
             del value_s_s
+
+
         self.top_n = top_n
         self.ascending = ascending
         self.max_dist = max_dist
@@ -668,7 +677,7 @@ def reduce_mem(rank_tables):
             raise e
     return tot_rank
 
-def rank_to_pval(rank_table, pval_threshold=1, category_to_description=None):
+def rank_to_pval(rank_table, feature_to_category, pval_threshold=1, category_to_description=None):
     try:
         rank_table.drop('p_value', axis=1, inplace=True)
     except ValueError:
@@ -1003,7 +1012,7 @@ def enrichme():
         else:
             cat_to_desc = None
 
-        p_val_df = rank_to_pval(tot_rank, pval_threshold=1,
+        p_val_df = rank_to_pval(tot_rank, feature_to_category, pval_threshold=1,
                             category_to_description=cat_to_desc)
         p_val_df.index.name = 'category'
         #make this as a function to also use it in a all-in-one run

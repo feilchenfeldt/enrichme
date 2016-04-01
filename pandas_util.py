@@ -124,7 +124,7 @@ def data_per_feature(rod,feature_df, feature_name='feature', max_dist=0):
             continue
         rod_chrom = rod.ix[chrom]
         if not feature_chrom.index.is_monotonic:
-            feature_chrom.sort_index(inplace=True)
+            feature_chrom = feature_chrom.sort_index()
         if not rod_chrom.index.is_monotonic:
             rod_chrom = rod_chrom.sort_index()
         pos_rel_to_start = feature_chrom.index.searchsorted(rod_chrom.index)
