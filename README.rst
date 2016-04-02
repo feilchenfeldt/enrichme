@@ -109,7 +109,7 @@ C. Scores across the genome (input argument --rod)\
     score or p-value associated with them.
     ROD stands for Reference Ordered Data.
 
-     .. code::
+    .. code::
 
         $head examples/example_GWAS_result.csv
         chrom,pos,score
@@ -122,6 +122,8 @@ C. Scores across the genome (input argument --rod)\
         1,6514,0.43630862
         1,6603,0.23235813
         1,6768,0.58977395
+
+
 
 
 Changelog
