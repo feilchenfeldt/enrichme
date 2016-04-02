@@ -26,22 +26,25 @@ Use `pip <http://pip-installer.org>`_ or easy_install::
 Testing
 ======================================================================
 
-You can run unit tests using the command:
+You can run unit tests using the command::
 
     python setup.py test
 
 How to use
 ======================================================================
 
-    enrichme.py -R Permute --help
+For help, see also::
+
+    ./enrichme.py -R Permute --help
 
 The program currently implements three methods:
-(1) Candidate  (enrichme.py -R Permute -M Candidate --help)
+
+1. Candidate  (enrichme.py -R Permute -M Candidate --help)\
     Comparing a candidate gene list to a background gene list.
     This is a standard function that is done by many enrichment
     analysis tools. No correction for gene length or LD.
 
-(2) TopScores (enrichme.py -R Permute -M TopScores --help)
+2. TopScores (enrichme.py -R Permute -M TopScores --help)\
     Check whether top ranking scores are within or close to genes
     enriched in specific gene-categories.
     This method naturally corrects for gene-length and LD.
@@ -50,7 +53,7 @@ The program currently implements three methods:
     No information is used from the ranking of scores that pass
     the threshold.
 
-(3) Summary (enrichme.py -R Permute -M Summary --help)
+3. Summary (enrichme.py -R Permute -M Summary --help)\
     Similar to TopScores but instead of defining a threshold
     on the scores, a summary of scores is calculated for each gene
     category. As an example, for each gene category, the program could
@@ -62,13 +65,13 @@ The program currently implements three methods:
 
 INPUT files:
 
-(A) FEATURE to CATEGORY mapping (input argument --feature_to_category)
+A. FEATURE to CATEGORY mapping (input argument --feature_to_category)\
     This file maps genetic features (usually genes) to feature categories
     such as gene-lists. This could be GO-terms or custom defined gene-lists.
     File can be tab-separated (.tsv) or comma-separates (.csv)
 
-    EXAMPLE
-    >head examples/example_gene_annotation.csv
+    EXAMPLE\
+    >head examples/example_gene_annotation.csv\
     gene_id,go_identifier
     AT1G01010,GO:0005634
     AT1G01010,GO:0006355
@@ -81,12 +84,12 @@ INPUT files:
     AT1G01020,GO:0016020
 
 
-(B) FEATURES (input argument --features)
+B. FEATURES (input argument --features)\
     This file gives the position of features (e.g. genes)
     across the genome. Often this will be the gene
     annotation. The column pos gives the start of the feature.
 
-    EXAMPLE
+    EXAMPLE::
     >head examples/example_gene_annotation.csv
     chrom,pos,end,gene_id
     1,3631,5899,AT1G01010
@@ -99,7 +102,7 @@ INPUT files:
     1,38752,40944,AT1G01070
     1,44677,44787,AT1G01073
 
-(C) Scores across the genome (input argument --rod)
+C. Scores across the genome (input argument --rod)\
     This could be position of SNPs and a
     score or p-value associated with them.
     ROD stands for Reference Ordered Data.
