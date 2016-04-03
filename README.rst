@@ -164,7 +164,22 @@ C. Scores across the genome (input argument --rod)\
         1,6603,0.23235813
         1,6768,0.58977395
 
+D. [Optional] Mapping of categories to category descriptions (input argument --category_to_description)\
+    This could be a csv with GO-category ids and descriptions.
 
+    .. code::
+
+        $head example_go_to_name.csv 
+        go_identifier,go_name
+        GO:0000001,mitochondrion inheritance
+        GO:0000002,mitochondrial genome maintenance
+        GO:0000003,reproduction
+        GO:0042254,ribosome biogenesis
+        GO:0044183,protein binding involved in protein folding
+        GO:0051082,unfolded protein binding
+        GO:0000006,high-affinity zinc uptake transmembrane transporter activity
+        GO:0000007,low-affinity zinc ion transmembrane transporter activity
+        GO:0003756,protein disulfide isomerase activity
 
 
 Changelog
