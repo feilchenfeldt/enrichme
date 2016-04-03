@@ -233,10 +233,9 @@ class CandidateEnrichment(object):
     def get_permut_rank_table(self, n_permut):
         rti = self.init_rank_table
         if self.ncpus > 1:
+            logging.info("Spawning {} processes.".format(self.ncpus))
             n_permut_proc = int(n_permut/self.ncpus)
             rts = parmap(lambda core: self.permuter(rti, n_permut_proc, core), range(self.ncpus), self.ncpus)
-            for r in rts:
-                print r.iloc[:5]
             rt = reduce_mem(rts)
         else:
             rt = self.permuter(rti, n_permut)
@@ -728,7 +727,7 @@ def save_info(enrich, name):
         pass
 
 def enrichme():
-    import argparse
+    import argparse, csv
     #import pdb
 
 
@@ -747,6 +746,13 @@ def enrichme():
                                                         "In the feature_to_category tsv."
                                                         "Expects 2 integers or strings.")
 
+    parser.add_argument('--category_to_description',
+                                 type=argparse.FileType('r'), required=False,
+                                 help='Tsv with category to category description mapping.')
+    parser.add_argument('--category_to_description_cols', nargs=2, default = ['category', 'description'],
+                                help="Column labels or positions (0-indexed) of 'category' and 'description' "
+                                                        "In the category_to_description tsv. "
+                                                        "Expects 2 integers or strings.")
     parser.add_argument('--logging_level','-l',
                         choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'],
                                 default='INFO', help='Minimun level of logging.')
@@ -761,7 +767,7 @@ def enrichme():
     permuteparser = runtypeparsers.add_parser('Permute', description='Make random permutations or shifts of input '
                                                               ' and save the ranks of the real assocations compared to permutations.')
     permuteparser.add_argument('-M','--mode', choices=['Candidate', 'Summary', 'TopScores'], help='Enrichment method.')
-    permuteparser.add_argument('--n_permut', type=int, default=0, help='Number of permutations or shifts.')
+    permuteparser.add_argument('--n_permut', default='auto', help='Number of permutations or shifts.')
                                                                     #'Use this option for multiple runs '
                                                                      #                'that are reduced in mode --M Reduce '
                                                                       #               'afterwards.')
@@ -770,7 +776,7 @@ def enrichme():
                                                                      'Use this option if you are running multiple permute '
                                                                      'job that are reduced later.')
     permuteparser.add_argument("--ncpus", '-nct',
-                            type=int, default=1, help='Number of cpus to use in parallel.')
+                            type=int, default=mp.cpu_count(), help='Number of cpus to use in parallel.')
 
     #permuteparser.add_argument('--reduce', action='store_true', help='Reduce on the fly. Use this option if you '
     #                                                                 'just want to do a single job.')
@@ -781,12 +787,6 @@ def enrichme():
                                            help='Filenames of permutation results of individual runs. '
                                                 ' (specified with --name in the permutation runs).')
     
-    reduceparser.add_argument('--category_to_description',
-                                 type=argparse.FileType('r'), help='Tsv with category to category description mapping.')
-    reduceparser.add_argument('--category_to_description_cols', nargs=2, default = ['category', 'description'],
-                                help="Column labels or positions (0-indexed) of 'category' and 'description' "
-                                                        "In the category_to_description tsv. "
-                                                        "Expects 2 integers or strings.")
     reduceparser.add_argument('--remove_input', action='store_true',
                                 help="Delete the input files given by --permuts .")
     #reduceparser.add_argument('--pval_threshold', type=float, default=1,
@@ -918,6 +918,16 @@ def enrichme():
                                                          sep=get_sep(args.feature_to_category.name))
     feature_to_category = feature_to_category[feature_to_category_cols]
 
+    if args.category_to_description is not None:
+        logging.info("Loading category to description mapping from {}.".format(args.category_to_description.name))
+        ctd_cols = parse_cols(args.category_to_description_cols)
+        cat_to_desc = pd.read_csv(args.category_to_description,
+                                             usecols=ctd_cols,
+                                             quoting=csv.QUOTE_NONE,
+                                             sep=get_sep(args.category_to_description))
+    else:
+        cat_to_desc = None
+
     #test whether name is writeable:
     #we do not test all derived filenames, but this should be ok for most cases)
     #try:
@@ -995,18 +1005,29 @@ def enrichme():
             #if permute_args.mode == 'TopScores':
             #    enrich.top_peaks.to_csv(args.name+'.top_peaks.tsv',sep='\t')
             #    enrich.peaks_per_gene.to_csv(args.name+'.peaks_per_gene.tsv',sep='\t')
+
+        if permute_args.n_permut == 'auto':
+            n_cats = len(enrich.feature_to_category[enrich.category_name].unique())
+            permute_args.n_permut = int(n_cats/0.02)
+            logging.info("Running {} permutations to get results informative "
+                         "above multiple testing "
+                         "for {} categories. Consider using more cores or "
+                         "map/reduce implementation if this takes "
+                         "too long.".format(permute_args.n_permut, n_cats))
+        else:
+            permute_args.n_permut = int(permute_args.n_permut)
         if permute_args.n_permut>0:
             start = time.time()
             enrich.permute(permute_args.n_permut)
             end = time.time()
             delta = end - start
-            logging.info("{} permutations took took {} seconds = {} minutes = {} hours.".format(permute_args.n_permut,
+            logging.info("{} permutations took {} seconds = {} minutes = {} hours.".format(permute_args.n_permut,
                                                                                                 delta,delta/60.,delta/3600.))
 
             if permute_args.noinfo:
                 enrich.rank_table.to_csv(args.name+'.ranktable.tsv', sep='\t', header=True)
             else:
-                enrich.get_pvals().to_csv(args.name+'.pvals.tsv', sep='\t', header=True)
+                enrich.get_pvals(category_to_description=cat_to_desc).to_csv(args.name+'.pvals.tsv', sep='\t', header=True)
 
     elif args.run_type == 'Reduce':
         if reduce_args.permuts is None:
@@ -1015,12 +1036,6 @@ def enrichme():
         permut_fhs = open_reduce_fns(reduce_args.permuts)
         tot_rank = reduce_fhs(permut_fhs)
 
-        if reduce_args.category_to_description is not None:
-            ctd_cols = parse_cols(reduce_args.category_to_description_cols)
-            cat_to_desc = pd.read_csv(reduce_args.category_to_description,
-                                                 usecols=ctd_cols, sep=get_sep(reduce_args.category_to_description))
-        else:
-            cat_to_desc = None
 
         p_val_df = rank_to_pval(tot_rank, feature_to_category, pval_threshold=1,
                             category_to_description=cat_to_desc)

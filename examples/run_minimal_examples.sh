@@ -21,21 +21,21 @@
 
 #echo MINIMAL EXAMPLE 1
 #echo "Simple single run of TopScores enrichment."
-#echo Test for enrichment in scores above 3 (p-value<10^-3)
-#
-#../enrichme.py -R Permute -M TopScores \
-#               --feature_to_category example_gene_to_category.csv \
-#               --feature_to_category_cols gene_id go_identifier  \
-#               --rod example_GWAS_result.csv \
-#               --rod_cols chrom pos score  \
-#               --features example_gene_annotation.csv \
-#               --feature_cols chrom start end gene_id \
-#               --name minimal_test_TopScores  \
-#               --n_permut 10 \
-#               --top_type threshold \
-#               --top 3 \
-#               --descending \
-#               --max_dist 5000 \
+echo Test for enrichment in scores above 3 (p-value<10^-3)
+
+../enrichme.py -R Permute -M TopScores \
+               --feature_to_category example_gene_to_category.csv \
+               --feature_to_category_cols gene_id go_identifier  \
+               --rod example_GWAS_result.csv \
+               --rod_cols chrom pos score  \
+               --features example_gene_annotation.csv \
+               --feature_cols chrom start end gene_id \
+               --name minimal_test_TopScores  \
+               --n_permut 10 \
+               --top_type threshold \
+               --top 3 \
+               --descending \
+               --max_dist 5000 \
 
 
 #arguments explained:
@@ -72,18 +72,18 @@ echo Test for enrichment of the mean across a category of the max scores across 
 echo Are there categories with high average gene scores?
 
 
-../enrichme.py -R Permute -M Summary \
-               --feature_to_category example_gene_to_category.csv \
+../enrichme.py -M Summary \
+               --feature_to_category example_gene_to_category_40_cats.csv \
                --feature_to_category_cols gene_id go_identifier  \
+               --category_to_description example_go_to_name.csv \
+               --category_to_description_cols go_identifier go_name \
                --rod example_GWAS_result.csv \
                --rod_cols chrom pos score  \
                --features example_gene_annotation.csv \
                --feature_cols chrom start end gene_id \
                --name minimal_test_Summary  \
-               --n_permut 40 \
                --feature_summary max \
                --category_summary mean \
-               --ncpus 4
 
 
 
