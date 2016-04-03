@@ -169,7 +169,7 @@ D. [Optional] Mapping of categories to category descriptions (input argument --c
 
     .. code::
 
-        $head example_go_to_name.csv 
+        $head examples/example_go_to_name.csv 
         go_identifier,go_name
         GO:0000001,mitochondrion inheritance
         GO:0000002,mitochondrial genome maintenance
