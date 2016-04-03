@@ -30,13 +30,8 @@ You can run unit tests using the command::
 
     python setup.py test
 
-How to use
+Enrichment test implementations
 ======================================================================
-
-For help, see also::
-
-    ./enrichme.py -R Permute --help
-
 The program currently implements three methods:
 
 1. Candidate  (enrichme.py -R Permute -M Candidate --help)\
@@ -63,7 +58,53 @@ The program currently implements three methods:
     down to low value or if the relative value of scores is important
     beyond defining a simple threshold.
 
-INPUT files:
+How to use
+======================================================================
+
+::
+
+    ./enrichme.py --help
+
+Example scripts with further explanations and example data can be found in ./examples/
+
+Test for enrichment of GWAS scores above 3 (p-value<10^-3) in GO-categories::
+
+    cd ./examples/
+    ../enrichme.py  -M TopScores \
+                    --feature_to_category example_gene_to_category.csv \
+                    --feature_to_category_cols gene_id go_identifier  \
+                    --rod example_GWAS_result.csv \
+                    --rod_cols chrom pos score  \
+                    --features example_gene_annotation.csv \
+                    --feature_cols chrom start end gene_id \
+                    --name minimal_test_TopScores  \
+                    --n_permut 10 \
+                    --top_type threshold \
+                    --top 3 \
+                    --descending \
+                    --max_dist 5000 \
+
+
+For each gene, calculate the max GWAS score within the gene. Then, test for enrichment of the mean of these gene-scores in  GO-categories::
+
+    cd ./examples/ 
+    ../enrichme.py -M Summary \
+                   --feature_to_category example_gene_to_category_40_cats.csv \
+                   --feature_to_category_cols gene_id go_identifier  \
+                   --category_to_description example_go_to_name.csv \
+                    --category_to_description_cols go_identifier go_name \
+                    --rod example_GWAS_result.csv \
+                    --rod_cols chrom pos score  \
+                    --features example_gene_annotation.csv \
+                    --feature_cols chrom start end gene_id \
+                    --name minimal_test_Summary  \
+                    --feature_summary max \
+                    --category_summary mean \
+
+
+
+Input files
+======================================================================
 
 A. FEATURE to CATEGORY mapping (input argument --feature_to_category)\
     This file maps genetic features (usually genes) to feature categories
@@ -123,7 +164,22 @@ C. Scores across the genome (input argument --rod)\
         1,6603,0.23235813
         1,6768,0.58977395
 
+D. [Optional] Mapping of categories to category descriptions (input argument --category_to_description)\
+    This could be a csv with GO-category ids and descriptions.
 
+    .. code::
+
+        $head examples/example_go_to_name.csv 
+        go_identifier,go_name
+        GO:0000001,mitochondrion inheritance
+        GO:0000002,mitochondrial genome maintenance
+        GO:0000003,reproduction
+        GO:0042254,ribosome biogenesis
+        GO:0044183,protein binding involved in protein folding
+        GO:0051082,unfolded protein binding
+        GO:0000006,high-affinity zinc uptake transmembrane transporter activity
+        GO:0000007,low-affinity zinc ion transmembrane transporter activity
+        GO:0003756,protein disulfide isomerase activity
 
 
 Changelog
