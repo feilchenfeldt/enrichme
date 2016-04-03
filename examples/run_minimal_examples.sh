@@ -48,18 +48,22 @@
 # columns in the feature (gene) annotation file.
 #
 # --name ... base name for all output files
-# --n_permut ... number of permutations. In practise, you need at least
-#                100*(#gene categories tested) permutations to have a change
-#                of getting a result significant above multiple testing.
-#                E.g., if you test 3000 GO_categories, you need 30000 permutations.
-#                For this, you will want to run the method in parallel on multiple cores
-#                and reduce the results. (See other example files)
-# --top_type ... Kind of threshold to apply. Other options are quantile or count.
+# --n_permut ... number of permutations. # --top_type ... Kind of threshold to apply. Other options are quantile or count.
 # --top ... says that genes close to scores>3 are tested
 # --descending ... says that higher-score means more significant,
 #                  for p-values, use descending instead
 # --max_dist ... means that genes that fall within +-5000 basepairs
 #                of a score are considered
+
+# NOTE on the number of permutations:
+# In practise, you need at least
+# 100*(#gene categories tested) permutations to have a change
+# of getting a result significant above multiple testing.
+# E.g., if you test 3000 GO_categories, you need 30000 permutations.
+# For this, you will want to run the method in parallel on multiple cores
+# (e.g., --ncpus 16) or submit multiple runs to a compute cluster
+# and reduce the results. (See file run_permute_reduce_examples.sh).
+
 
 
 echo MINIMAL EXAMPLE 2
@@ -76,9 +80,10 @@ echo Are there categories with high average gene scores?
                --features example_gene_annotation.csv \
                --feature_cols chrom start end gene_id \
                --name minimal_test_Summary  \
-               --n_permut 10 \
+               --n_permut 40 \
                --feature_summary max \
                --category_summary mean \
+               --ncpus 4
 
 
 

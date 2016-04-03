@@ -33,7 +33,7 @@ of the input (score, feature, category, n_features, ...)!?
 import os, sys
 import pandas as pd
 import numpy as np
-import gc, logging
+import gc, logging, time
 import multiprocessing as mp
 import pandas_util as hp
 #import warnings
@@ -115,6 +115,7 @@ def shift_rod(rod_df, rnd, mode = "grid"):
 
 
 #parallel support
+#from http://stackoverflow.com/questions/3288595/multiprocessing-using-pool-map-on-a-function-defined-in-a-class
 
 def fun(f,q_in,q_out):
     while True:
@@ -211,11 +212,13 @@ class CandidateEnrichment(object):
         rt = init_rank_table(real_assoc)
         return rt
 
-    def permuter(self, rank_table, n_permut):
+    def permuter(self, rank_table, n_permut, core=None):
         """
         Update the supplied rank table (rt) with the 
         """
         rt = rank_table.copy()
+        if core is not None:
+            np.random.seed(int(time.time()*0.0001*(core+1)))
         for i in xrange(n_permut):
             permut_candidate_features = np.random.choice(self.all_candidate_features,
                                             size=len(self.candidate_features), replace=False)
@@ -231,7 +234,9 @@ class CandidateEnrichment(object):
         rti = self.init_rank_table
         if self.ncpus > 1:
             n_permut_proc = int(n_permut/self.ncpus)
-            rts = parmap(lambda:self.permuter(rti,n_permut_proc), range(self.ncpus), self.ncpus)
+            rts = parmap(lambda core: self.permuter(rti, n_permut_proc, core), range(self.ncpus), self.ncpus)
+            for r in rts:
+                print r.iloc[:5]
             rt = reduce_mem(rts)
         else:
             rt = self.permuter(rti, n_permut)
@@ -242,7 +247,7 @@ class CandidateEnrichment(object):
         self.rank_table = reduce_mem([self.rank_table, rt])
 
     def get_pvals(self, pval_threshold=1, category_to_description=None):
-        return rank_to_pval(self.rank_table, self.feature_to_category, pval_threshold=1, category_to_description=None)
+        return rank_to_pval(self.rank_table, self.feature_to_category, pval_threshold=1, category_to_description=category_to_description)
 
     def create_info(self):
         """
@@ -419,8 +424,13 @@ class SummaryEnrichment(CandidateEnrichment):
 
 
 
-    def permuter(self, rank_table, n_permut):
+    def permuter(self, rank_table, n_permut, core=None):
         rank_table = rank_table.copy()
+        if core is not None:
+            np.random.seed(int(time.time()*0.0001*(core+1)))
+        #rnds = np.random.rand(n_permut)
+        #print core
+        #print rnds
         for rnd in np.random.rand(n_permut):
             s = shift_rod(self.value_s, rnd)
             assoc = self.get_association(s)
@@ -718,7 +728,7 @@ def save_info(enrich, name):
         pass
 
 def enrichme():
-    import argparse, time
+    import argparse
     #import pdb
 
 
@@ -727,7 +737,7 @@ def enrichme():
                                     description=
                                       "Test enrichment of features (e.g. genes) in certain categories.",
                                                                              add_help=False)
-    parser.add_argument("-R",'--run_type', choices=['Permute','Reduce'])
+    parser.add_argument("-R",'--run_type', choices=['Permute','Reduce'], default='Permute')
     parser.add_argument('-N','--name', help='Base name for all the output files. ')
     parser.add_argument("--feature_to_category", type=argparse.FileType('r'),
                                             help="Filename for tsv that links features to"
