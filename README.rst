@@ -30,13 +30,8 @@ You can run unit tests using the command::
 
     python setup.py test
 
-How to use
+Enrichment test implementations
 ======================================================================
-
-For help, see also::
-
-    ./enrichme.py -R Permute --help
-
 The program currently implements three methods:
 
 1. Candidate  (enrichme.py -R Permute -M Candidate --help)\
@@ -63,7 +58,52 @@ The program currently implements three methods:
     down to low value or if the relative value of scores is important
     beyond defining a simple threshold.
 
-INPUT files:
+How to use
+======================================================================
+
+::
+
+    ./enrichme.py --help
+
+Example scripts with further explanations and example data can be found in ./examples/
+
+Test for enrichment in GWAS scores above 3 (p-value<10^-3)::
+
+    cd ./examples/
+    ../enrichme.py  -M TopScores \
+                    --feature_to_category example_gene_to_category.csv \
+                    --feature_to_category_cols gene_id go_identifier  \
+                    --rod example_GWAS_result.csv \
+                    --rod_cols chrom pos score  \
+                    --features example_gene_annotation.csv \
+                    --feature_cols chrom start end gene_id \
+                    --name minimal_test_TopScores  \
+                    --n_permut 10 \
+                    --top_type threshold \
+                    --top 3 \
+                    --descending \
+                    --max_dist 5000 \
+
+Test for enrichment of the mean across a category of the max scores across genes in this category::
+    
+    cd ./examples/ 
+    ../enrichme.py -M Summary \
+                   --feature_to_category example_gene_to_category_40_cats.csv \
+                   --feature_to_category_cols gene_id go_identifier  \
+                   --category_to_description example_go_to_name.csv \
+                    --category_to_description_cols go_identifier go_name \
+                    --rod example_GWAS_result.csv \
+                    --rod_cols chrom pos score  \
+                    --features example_gene_annotation.csv \
+                    --feature_cols chrom start end gene_id \
+                    --name minimal_test_Summary  \
+                    --feature_summary max \
+                    --category_summary mean \
+
+
+
+Input files
+======================================================================
 
 A. FEATURE to CATEGORY mapping (input argument --feature_to_category)\
     This file maps genetic features (usually genes) to feature categories
