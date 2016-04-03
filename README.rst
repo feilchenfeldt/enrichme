@@ -67,7 +67,7 @@ How to use
 
 Example scripts with further explanations and example data can be found in ./examples/
 
-Test for enrichment in GWAS scores above 3 (p-value<10^-3)::
+Test for enrichment of GWAS scores above 3 (p-value<10^-3) in GO-categories::
 
     cd ./examples/
     ../enrichme.py  -M TopScores \
@@ -84,8 +84,9 @@ Test for enrichment in GWAS scores above 3 (p-value<10^-3)::
                     --descending \
                     --max_dist 5000 \
 
-Test for enrichment of the mean across a category of the max scores across genes in this category::
-    
+
+For each gene, calculate the max GWAS score within the gene. Then, test for enrichment of the mean of these gene-scores in  GO-categories::
+
     cd ./examples/ 
     ../enrichme.py -M Summary \
                    --feature_to_category example_gene_to_category_40_cats.csv \
