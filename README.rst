@@ -20,7 +20,7 @@ Installation
 
 Use `pip <http://pip-installer.org>`_ or easy_install::
 
-    pip install enrichme==0.1.0
+    pip install enrichme==0.1.1
 
 
 Testing
@@ -34,12 +34,12 @@ Enrichment test implementations
 ======================================================================
 The program currently implements three methods:
 
-1. Candidate  (enrichme.py -M Candidate --help)\
+1. Candidate  (enrichme -M Candidate --help)\
     Comparing a candidate gene list to a background gene list.
     This is a standard function that is done by many enrichment
     analysis tools. No correction for gene length or LD.
 
-2. TopScores (enrichme.py -M TopScores --help)\
+2. TopScores (enrichme -M TopScores --help)\
     Check whether top ranking scores are within or close to genes
     enriched in specific gene-categories.
     This method naturally corrects for gene-length and LD.
@@ -48,7 +48,7 @@ The program currently implements three methods:
     No information is used from the ranking of scores that pass
     the threshold.
 
-3. Summary (enrichme.py -M Summary --help)\
+3. Summary (enrichme -M Summary --help)\
     Similar to TopScores but instead of defining a threshold
     on the scores, a summary of scores is calculated for each gene
     category. As an example, for each gene category, the program could
@@ -63,43 +63,43 @@ How to use
 
 ::
 
-    ./enrichme.py --help
+    enrichme --help
 
 Example scripts with further explanations and example data can be found in ./examples/
 
 Test for enrichment of GWAS scores above 3 (p-value<10^-3) in GO-categories::
 
     cd ./examples/
-    ../enrichme.py  -M TopScores \
-                    --feature_to_category example_gene_to_category.csv \
-                    --feature_to_category_cols gene_id go_identifier  \
-                    --rod example_GWAS_result.csv \
-                    --rod_cols chrom pos score  \
-                    --features example_gene_annotation.csv \
-                    --feature_cols chrom start end gene_id \
-                    --name minimal_test_TopScores  \
-                    --n_permut 10 \
-                    --top_type threshold \
-                    --top 3 \
-                    --descending \
-                    --max_dist 5000 \
+    enrichme    -M TopScores \
+                --feature_to_category example_gene_to_category.csv \
+                --feature_to_category_cols gene_id go_identifier  \
+                --rod example_GWAS_result.csv \
+                --rod_cols chrom pos score  \
+                --features example_gene_annotation.csv \
+                --feature_cols chrom start end gene_id \
+                --name minimal_test_TopScores  \
+                --n_permut 10 \
+                --top_type threshold \
+                --top 3 \
+                --descending \
+                --max_dist 5000 \
 
 
 For each gene, calculate the max GWAS score within the gene. Then, test for enrichment of the mean of these gene-scores in  GO-categories::
 
     cd ./examples/ 
-    ../enrichme.py -M Summary \
-                   --feature_to_category example_gene_to_category_40_cats.csv \
-                   --feature_to_category_cols gene_id go_identifier  \
-                   --category_to_description example_go_to_name.csv \
-                    --category_to_description_cols go_identifier go_name \
-                    --rod example_GWAS_result.csv \
-                    --rod_cols chrom pos score  \
-                    --features example_gene_annotation.csv \
-                    --feature_cols chrom start end gene_id \
-                    --name minimal_test_Summary  \
-                    --feature_summary max \
-                    --category_summary mean \
+    enrichme -M Summary \
+             --feature_to_category example_gene_to_category_40_cats.csv \
+             --feature_to_category_cols gene_id go_identifier  \
+             --category_to_description example_go_to_name.csv \
+             --category_to_description_cols go_identifier go_name \
+             --rod example_GWAS_result.csv \
+             --rod_cols chrom pos score  \
+             --features example_gene_annotation.csv \
+             --feature_cols chrom start end gene_id \
+             --name minimal_test_Summary  \
+             --feature_summary max \
+             --category_summary mean \
 
 
 
