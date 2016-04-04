@@ -181,6 +181,21 @@ D. [Optional] Mapping of categories to category descriptions (input argument --c
         GO:0000007,low-affinity zinc ion transmembrane transporter activity
         GO:0003756,protein disulfide isomerase activity
 
+Output
+======================================================================
+
+The different modes provide different output files. The main output file is common for all modes, called <name>.pvals.tsv. It is a ranked table with most significantly enriched categories on top::
+
+    go_identifier   out_of  rank    score_summary   p_value benjamini_hochberg      go_name
+    GO:0000165      2000    1943    0.8731354255802085      0.02898550724637683     27.014492753623205      MAPK cascade
+    GO:0000041      2000    1825    0.8348620634942308      0.08795602198900554     27.32500416458439       transition metal ion transport
+    GO:0000160      2000    1800    0.9736749697560976      0.1004497751124438      23.404797601199405      phosphorelay signal transduction system
+    GO:0000164      2000    1698    1.0469719100000001      0.15142428785607198     28.225487256371814      protein phosphatase type 1 complex
+    GO:0000096      2000    1692    0.8680123230000001      0.15442278860569714     23.987006496751622      sulfur amino acid metabolic process
+    GO:0000145      2000    1685    0.9976431777777778      0.15792103948025982     21.02605839937174       exocyst
+    GO:0000159      2000    1562    0.9504652303750003      0.21939030484757627     25.558970514742636      protein phosphatase type 2A complex
+    GO:0000156      2000    1558    0.9427544812820514      0.22138930534732637     22.92609250930091       phosphorelay response regulator activity
+
 
 Changelog
 ======================================================================
