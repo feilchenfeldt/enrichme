@@ -16,7 +16,7 @@ if sys.argv[-1] == "publish":
     sys.exit()
 
 setup(
-    name='Enrichme',
+    name='enrichme',
     version=enrichme.__version__,
     description='Test enrichment of genome-wide statistics in gene (or other) categories while correcting for gene-length and clustering.',
     long_description=open('README.rst').read() + '\n\n' +
