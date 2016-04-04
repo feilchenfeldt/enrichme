@@ -34,12 +34,12 @@ Enrichment test implementations
 ======================================================================
 The program currently implements three methods:
 
-1. Candidate  (enrichme.py -R Permute -M Candidate --help)\
+1. Candidate  (enrichme.py -M Candidate --help)\
     Comparing a candidate gene list to a background gene list.
     This is a standard function that is done by many enrichment
     analysis tools. No correction for gene length or LD.
 
-2. TopScores (enrichme.py -R Permute -M TopScores --help)\
+2. TopScores (enrichme.py -M TopScores --help)\
     Check whether top ranking scores are within or close to genes
     enriched in specific gene-categories.
     This method naturally corrects for gene-length and LD.
@@ -48,7 +48,7 @@ The program currently implements three methods:
     No information is used from the ranking of scores that pass
     the threshold.
 
-3. Summary (enrichme.py -R Permute -M Summary --help)\
+3. Summary (enrichme.py -M Summary --help)\
     Similar to TopScores but instead of defining a threshold
     on the scores, a summary of scores is calculated for each gene
     category. As an example, for each gene category, the program could
