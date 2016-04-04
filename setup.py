@@ -39,7 +39,7 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     keywords='Enrichment',
-    py_modules=['enrichment','pandas_util'],
+    py_modules=['enrichme','pandas_util'],
     #packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=[
         "pandas"
