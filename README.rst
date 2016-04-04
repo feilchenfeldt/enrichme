@@ -1,4 +1,4 @@
-Enrichme
+enrichme
 ======================================================================
 
 Testing for enrichment of genome-wide scores or p-values
