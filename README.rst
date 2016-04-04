@@ -196,6 +196,16 @@ The different modes provide different output files. The main output file is comm
     GO:0000159      2000    1562    0.9504652303750003      0.21939030484757627     25.558970514742636      protein phosphatase type 2A complex
     GO:0000156      2000    1558    0.9427544812820514      0.22138930534732637     22.92609250930091       phosphorelay response regulator activity
 
+Parallel support
+======================================================================
+
+There are two ways to run this program in parallel. Per default, the program uses as many cores as available on the host machine. This can be controlled with the --ncpus option. Advanced users, who want to parallelise across multiple nodes of a compute cluster, can use the built in map/reduce framework to automatically combine results from multiple independent runs. See
+
+::
+
+    examples/run_permute_reduce_examples.sh
+    
+for an example.
 
 Changelog
 ======================================================================
