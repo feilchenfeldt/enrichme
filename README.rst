@@ -21,7 +21,11 @@ Installation
 Use `pip <http://pip-installer.org>`_ or easy_install::
 
     pip install enrichme==0.1.1
-
+    
+Or clone/download repo manually and run::
+    
+    python setup.py install 
+    
 
 Testing
 ======================================================================
@@ -65,7 +69,9 @@ How to use
 
     enrichme --help
 
-Example scripts with further explanations and example data can be found in ./examples/
+Example scripts with further explanations and example data can be found in the `examples folder <examples>`_  
+
+They will be installed alongside the enrichme package. The location depends whether enrichme is installed system-wide or into a virtual environment. Alternatively you can `download <https://github.com/feilchenfeldt/enrichme/archive/master.zip>`_ the repo as a zip and extract it and run the samples below inside the examples folder.
 
 Test for enrichment of GWAS scores above 3 (p-value<10^-3) in GO-categories::
 
@@ -216,5 +222,5 @@ are encouraged to specify explicitly the version in your dependency
 tools, e.g.::
 
     pip install enrichme==0.1.0
-
-- 0.1.0 Initial release. 
+    
+For a detailed CHANGELOG refer to this `document <HISTORY.rst>`_
