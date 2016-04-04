@@ -18,7 +18,7 @@ if sys.argv[-1] == "publish":
 setup(
     name='Enrichme',
     version=enrichme.__version__,
-    description='An enrichment library',
+    description='Test enrichment of genome-wide statistics in gene (or other) categories while correcting for gene-length and clustering.',
     long_description=open('README.rst').read() + '\n\n' +
                      open('HISTORY.rst').read(),
     url='https://github.com/feilchenfeldt/enrichme',
